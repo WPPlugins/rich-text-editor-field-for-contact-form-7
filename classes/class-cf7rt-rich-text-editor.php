@@ -91,16 +91,13 @@ class CF7RT_Rich_Text_Editor{
 	    wp_editor( $value, $tag->name,$settings);
 	    $rich_editor = ob_get_contents();
 
-	    $html = '<span class="wpcf7-form-control-wrap '.$tag->name.'">'.$rich_editor.$validation_error.'</span>
-	    <script type="text/javascript">
-	    jQuery(document).ready(function() {
-	        jQuery(".wpcf7-form").submit(function(e){
-	            jQuery("#'.$tag->name.'").val(tinyMCE.get("'.$tag->name.'").getContent());
-	            return true;
-	        });
-	    });
-	    </script>';
-
+	    $html = '<span class="wpcf7-form-control-wrap '.$tag->name.'">'.$rich_editor.$validation_error.'</span>';
+		
+		wp_register_script( 'rich-text-editor', '', array("jquery",'wp-tinymce'), '', true );
+		wp_enqueue_script( 'rich-text-editor'  );
+		wp_add_inline_script( 'rich-text-editor','<script defer>jQuery(document).ready(function() { jQuery(".wpcf7-form").submit(function(e){ jQuery("#'.$tag->name.'").val(tinyMCE.get("'.$tag->name.'").getContent()); return true;	        });
+	    });</script>');
+	
 	    ob_end_clean();
 
 	    return $html;
